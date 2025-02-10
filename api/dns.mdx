@@ -1,0 +1,131 @@
+---
+title: "DNS"
+description: "Query current and historical DNS records."
+---
+
+<Info>
+  This endpoint seamlessly supports both **forward** and **reverse** queries.
+</Info>
+
+## Example
+
+```json
+// https://api.opensystems.sh/dns?q=microsoft0nline.eu
+
+{
+  "data": [
+    {
+      "first_seen": "2024-09-09T07:52:10Z",
+      "last_seen": "2024-09-09T07:52:10Z",
+      "name": "microsoft0nline.eu.",
+      "type": "TXT",
+      "data": [
+        "\"MS=ms67233610\"",
+        "\"v=spf1 ip4:185.111.99.169 include:spf.protection.outlook.com ~all\""
+      ]
+    },
+    {
+      "first_seen": "2024-09-09T07:52:09Z",
+      "last_seen": "2024-09-09T07:52:09Z",
+      "name": "microsoft0nline.eu.",
+      "type": "A",
+      "data": ["81.2.196.19"]
+    },
+    {
+      "first_seen": "2024-09-09T07:52:09Z",
+      "last_seen": "2024-09-09T07:52:09Z",
+      "name": "microsoft0nline.eu.",
+      "type": "SOA",
+      "data": ["ns.forpsi.net. admin.forpsi.com. 0 14400 3600 2592000 3600"]
+    },
+    {
+      "first_seen": "2024-09-09T07:52:09Z",
+      "last_seen": "2024-09-09T07:52:09Z",
+      "name": "microsoft0nline.eu.",
+      "type": "MX",
+      "data": ["1 microsoft0nline-eu.mail.protection.outlook.com."]
+    },
+    {
+      "first_seen": "2024-09-09T07:45:03Z",
+      "last_seen": "2024-09-09T07:45:03Z",
+      "name": "microsoft0nline.eu.",
+      "type": "NS",
+      "data": ["ns.forpsi.cz.", "ns.forpsi.net.", "ns.forpsi.it."]
+    }
+  ],
+  "meta": { "results": 5 }
+}
+```
+
+## Base URL
+
+```
+https://api.opensystems.sh/dns
+```
+
+## Authentication
+
+Authenticate by passing your API key (with no additional encoding) as `Bearer` token in the `Authorization` header or as `key` parameter in the query string.
+
+## Parameters
+
+<ParamField query="q" type="string" required>
+  Find records containing the following:
+
+- `example.com` returns records containing `example.com`
+- `.example.com` returns records containing `example.com` or any of its subdomains
+- `159.100.30.41` returns records that point to this IP address
+- `159.100.30.0/24` returns records that point to any IP addresses from this CIDR
+- `hostmaster@example.com` returns SOA records with this email address for RNAME
+- `*@example.com` returns SOA records with any email address on the `example.com` domain for RNAME
+- `"v=spf1 ip4:185.111.99.169 include:spf.protection.outlook.com ~all"` returns TXT records including this value
+
+</ParamField>
+
+<ParamField query="field" type="string">
+  Limit the search to a specific field. Accepted values are `name` and `data`.
+</ParamField>
+
+<ParamField query="type" type="string">
+  Accepts a comma-separated list of record types, which can be specified as
+  strings, numbers, or a combination of both, to filter the results (e.g.,
+  `type=NS,SOA`).
+
+You can also prefix a type with `-` (minus sign) to exclude it from the results (e.g. `type=-TXT`).
+
+</ParamField>
+
+<ParamField query="expand" type="boolean">
+  When set to true, expands RRsets into individual records and treats each as a
+  separate RRset. Defaults to false.
+</ParamField>
+
+<ParamField query="from" type="datetime">
+  Limit results to records seen after this date (e.g. `from=2022-01-01`). Also
+  accepts UNIX timestamp and relative times (e.g. `from=-30d` for 30 days ago).
+</ParamField>
+
+<ParamField query="to" type="datetime">
+  Limit results to records seen before this date (e.g. `to=2023-03-13`). Also
+  accepts UNIX timestamp and relative times (e.g. `to=-30d` for 30 days ago).
+</ParamField>
+
+<ParamField query="not_before" type="datetime">
+  Limit results to records **not** seen before this date (e.g.
+  `not_before=2023-07-01`). Also accepts UNIX timestamp and relative times (e.g.
+  `not_before=-30d` for 30 days ago).
+</ParamField>
+
+<ParamField query="sort" type="string">
+  Available sorts are `first_seen` (the default) or `last_seen`. Both are
+  descending sorts (most recent first).
+</ParamField>
+
+<ParamField query="limit" type="number">
+  Limit the number of results (e.g. `limit=10000`). Defaults to `100`, and up to
+  `10,000`.
+</ParamField>
+
+<ParamField query="offset" type="number">
+  Used for pagination. Defaults to `0`.
+</ParamField>

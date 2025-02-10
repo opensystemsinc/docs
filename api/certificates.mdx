@@ -1,0 +1,259 @@
+---
+title: "Certificates"
+description: "Find all past and present TLS certificates issued for any name."
+---
+
+## Example
+
+```json
+// https://api.opensystems.sh/certificates?q=netflixpay.online
+
+{
+  "data": [
+    {
+      "id": "a085673a06b4f319063ab1db48676185fd85ce82f80b6e57846a8eba3cc35b32",
+      "serial_number": "eb9b62bef5bd64940de3040ca1e2261f",
+      "subject": {
+        "common_name": "netflixpay.online",
+        "alternative_names": [
+          { "type": "domain", "name": "netflixpay.online" },
+          { "type": "domain", "name": "*.netflixpay.online" }
+        ],
+        "key": {
+          "id": "79ac9380901b959627fe1758a406605ac22c12f3",
+          "algorithm": "RSA",
+          "size": 2048,
+          "fingerprints": {
+            "sha256": "1ccf2ada87abcb8b62094b8ae88b8269dc79d68b2bdbdbce1acd44ee3ffc9cbc"
+          }
+        }
+      },
+      "issuer": {
+        "common_name": "GTS CA 1P5",
+        "organization": "Google Trust Services LLC",
+        "country": "US"
+      },
+      "validity": {
+        "not_before": "2024-05-06T10:31:31Z",
+        "not_after": "2024-08-04T10:31:30Z"
+      },
+      "fingerprints": {
+        "sha1": "e64aab6043055c2b0a0e877dd22cb0d88db24bb4",
+        "sha256": "b6fe95220faf581d57239469ee6917dadb28ed4ec7f482cb535b292ba51de2b3"
+      }
+    }
+
+    // ...
+  ],
+  "meta": { "results": 5 }
+}
+```
+
+## Base URL
+
+```
+https://api.opensystems.sh/certificates
+```
+
+## Authentication
+
+Authenticate by passing your API key (with no additional encoding) as `Bearer` token in the `Authorization` header or as `key` parameter in the query string.
+
+## Parameters
+
+<ParamField query="q" type="string" required>
+  Find certificates containing the following:
+
+- `example.com` returns every certificates covering the domain `example.com`
+- `.example.com` returns every certificates covering the domain example.com or any of its subdomains
+
+</ParamField>
+
+<ParamField query="strict" type="boolean">
+  When set to true, do not consider wildcard parent names as a match (e.g.
+  `?q=www.example.com&strict=1` will not match certificates with
+  `*.example.com`). Defaults to false.
+</ParamField>
+
+<ParamField query="from" type="datetime">
+  Limit results to certificates valid after this date (e.g. `from=2022-01-01`).
+  Also accepts UNIX timestamp and relative times (e.g. `from=-30d` for 30 days
+  ago).
+</ParamField>
+
+<ParamField query="to" type="datetime">
+  Limit results to certificates valid before this date (e.g. `to=2023-03-13`).
+  Also accepts UNIX timestamp and relative times (e.g. `to=-30d` for 30 days
+  ago).
+</ParamField>
+
+<ParamField query="limit" type="number">
+  Limit the number of results (e.g. `limit=10000`). Defaults to `100`, and up to
+  `10,000`.
+</ParamField>
+
+<ParamField query="offset" type="number">
+  Used for pagination. Defaults to `0`.
+</ParamField>
+
+## Download
+
+You can download the raw certificate in PEM format using the following URL, replacing `{id}` with the certificate ID:
+
+```
+https://api.opensystems.sh/certificates/{id}.pem
+```
+
+<Accordion title="Example">
+```txt
+-----BEGIN CERTIFICATE-----
+MIIFfDCCBGSgAwIBAgIRAOubYr71vWSUDeMEDKHiJh8wDQYJKoZIhvcNAQELBQAw
+RjELMAkGA1UEBhMCVVMxIjAgBgNVBAoTGUdvb2dsZSBUcnVzdCBTZXJ2aWNlcyBM
+TEMxEzARBgNVBAMTCkdUUyBDQSAxUDUwHhcNMjQwNTA2MTAzMTMxWhcNMjQwODA0
+MTAzMTMwWjAcMRowGAYDVQQDExFuZXRmbGl4cGF5Lm9ubGluZTCCASIwDQYJKoZI
+hvcNAQEBBQADggEPADCCAQoCggEBAM+aV5vmFWKgnNayg04TZtNAf1uLNeItvGgD
+PcKBPXrC+VAOyr5s7jr3E6f+HtiD+O5Pfl8b4bjuzPnz7eJwwsPS5vtxxIJ7BA8y
+Im8rK45wh9VCQIaXRwsjNglNiJ6/rj5XyPrifaobJBONVS7GjM5GkAlYg+Upp3WG
+RUJXLgV1r7VM2j/maBufflYbSRy45jLnkuH5kdWUsFtD6iRa+zMjbqwurigPD2vN
+ZA2jYvLTxQRwNJFO96qFWA+Z6M4DZfTVdtXdZQLzBms3I+7/ZD+K7praYb6U/X6Y
+VX590hDY4MeDHrs76IN0vwouNvDp2jDUll9J5FBNaz9JtU21hbkCAwEAAaOCAo0w
+ggKJMA4GA1UdDwEB/wQEAwIFoDATBgNVHSUEDDAKBggrBgEFBQcDATAMBgNVHRMB
+Af8EAjAAMB0GA1UdDgQWBBR5rJOAkBuVlif+F1ikBmBawiwS8zAfBgNVHSMEGDAW
+gBTV/J4N3x7K3QiXl24rxV/FK/XsuDB4BggrBgEFBQcBAQRsMGowNQYIKwYBBQUH
+MAGGKWh0dHA6Ly9vY3NwLnBraS5nb29nL3MvZ3RzMXA1L3Y1cGlTZFM5MjVZMDEG
+CCsGAQUFBzAChiVodHRwOi8vcGtpLmdvb2cvcmVwby9jZXJ0cy9ndHMxcDUuZGVy
+MDEGA1UdEQQqMCiCEW5ldGZsaXhwYXkub25saW5lghMqLm5ldGZsaXhwYXkub25s
+aW5lMCEGA1UdIAQaMBgwCAYGZ4EMAQIBMAwGCisGAQQB1nkCBQMwPAYDVR0fBDUw
+MzAxoC+gLYYraHR0cDovL2NybHMucGtpLmdvb2cvZ3RzMXA1L3Y1VlRfNjRKaXpN
+LmNybDCCAQQGCisGAQQB1nkCBAIEgfUEgfIA8AB1AHb/iD8KtvuVUcJhzPWHujS0
+pM27KdxoQgqf5mdMWjp0AAABj02sWwgAAAQDAEYwRAIgDuKTxN0zAyY3F+z673u4
+1ThnQ1joW6XT6YTL0FJ8FIcCICf0qT0dwx+baVTsobh+GoyBazPEBXKltH7S86nN
+JC/OAHcAPxdLT9ciR1iUHWUchL4NEu2QN38fhWrrwb8ohez4ZG4AAAGPTaxa5wAA
+BAMASDBGAiEAwzgAEzidOCLX8hDawH/kB7PzAPRNDeTGhMj5ZPKlwF8CIQCKd9IV
+G+CSf7Oob0POIeVi4rW5BQiKT4LCo19X2gPmnDANBgkqhkiG9w0BAQsFAAOCAQEA
+SCnIJkJ7AEdFXGwPG3MfD2J8fGuLv+FaO+UUGN+Gx6hS5RH5MqOUFzsyE93GXt4y
+hCISk/McMKUHwoq6qlRjZFBU+MSIdSz3H8EckO2eynCj7Hhtkia7BSx/DtleaPr1
+2oLMrY/LbZQBwTDBKTwN2sEbwlkdwTCZQ7F+mRRH+uGwCQkeYqk9PRIwDGdEJOlT
+W93DLen5Cxho6FafTmrFfpQlmrDRH8/13OxmmY3yzTdbsaWrdmgR15myZoyYfqS1
+bYI1eH3nbWkZBMVMH5EYOESHsx0H1xl2aqSIaJhwDBblyZWxbMkv8L6qK3ih6jhL
+ZGUyO/UHlbgkHNj7UREShQ==
+-----END CERTIFICATE-----
+```
+
+</Accordion>
+
+<Info>
+  Replace `.pem` with `.crt` to download the certificate in DER format.
+</Info>
+
+## OpenSSL Text Output
+
+You can view the OpenSSL text output of the certificate using the following URL, replacing `{id}` with the certificate ID:
+
+```
+https://api.opensystems.sh/certificates/{id}.txt
+```
+
+<Accordion title="Example">
+```txt
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number:
+            eb:9b:62:be:f5:bd:64:94:0d:e3:04:0c:a1:e2:26:1f
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=US, O=Google Trust Services LLC, CN=GTS CA 1P5
+        Validity
+            Not Before: May  6 10:31:31 2024 GMT
+            Not After : Aug  4 10:31:30 2024 GMT
+        Subject: CN=netflixpay.online
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:cf:9a:57:9b:e6:15:62:a0:9c:d6:b2:83:4e:13:
+                    66:d3:40:7f:5b:8b:35:e2:2d:bc:68:03:3d:c2:81:
+                    3d:7a:c2:f9:50:0e:ca:be:6c:ee:3a:f7:13:a7:fe:
+                    1e:d8:83:f8:ee:4f:7e:5f:1b:e1:b8:ee:cc:f9:f3:
+                    ed:e2:70:c2:c3:d2:e6:fb:71:c4:82:7b:04:0f:32:
+                    22:6f:2b:2b:8e:70:87:d5:42:40:86:97:47:0b:23:
+                    36:09:4d:88:9e:bf:ae:3e:57:c8:fa:e2:7d:aa:1b:
+                    24:13:8d:55:2e:c6:8c:ce:46:90:09:58:83:e5:29:
+                    a7:75:86:45:42:57:2e:05:75:af:b5:4c:da:3f:e6:
+                    68:1b:9f:7e:56:1b:49:1c:b8:e6:32:e7:92:e1:f9:
+                    91:d5:94:b0:5b:43:ea:24:5a:fb:33:23:6e:ac:2e:
+                    ae:28:0f:0f:6b:cd:64:0d:a3:62:f2:d3:c5:04:70:
+                    34:91:4e:f7:aa:85:58:0f:99:e8:ce:03:65:f4:d5:
+                    76:d5:dd:65:02:f3:06:6b:37:23:ee:ff:64:3f:8a:
+                    ee:9a:da:61:be:94:fd:7e:98:55:7e:7d:d2:10:d8:
+                    e0:c7:83:1e:bb:3b:e8:83:74:bf:0a:2e:36:f0:e9:
+                    da:30:d4:96:5f:49:e4:50:4d:6b:3f:49:b5:4d:b5:
+                    85:b9
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Key Usage: critical
+                Digital Signature, Key Encipherment
+            X509v3 Extended Key Usage:
+                TLS Web Server Authentication
+            X509v3 Basic Constraints: critical
+                CA:FALSE
+            X509v3 Subject Key Identifier:
+                79:AC:93:80:90:1B:95:96:27:FE:17:58:A4:06:60:5A:C2:2C:12:F3
+            X509v3 Authority Key Identifier:
+                D5:FC:9E:0D:DF:1E:CA:DD:08:97:97:6E:2B:C5:5F:C5:2B:F5:EC:B8
+            Authority Information Access:
+                OCSP - URI:http://ocsp.pki.goog/s/gts1p5/v5piSdS925Y
+                CA Issuers - URI:http://pki.goog/repo/certs/gts1p5.der
+            X509v3 Subject Alternative Name:
+                DNS:netflixpay.online, DNS:*.netflixpay.online
+            X509v3 Certificate Policies:
+                Policy: 2.23.140.1.2.1
+                Policy: 1.3.6.1.4.1.11129.2.5.3
+            X509v3 CRL Distribution Points:
+                Full Name:
+                  URI:http://crls.pki.goog/gts1p5/v5VT_64JizM.crl
+            CT Precertificate SCTs:
+                Signed Certificate Timestamp:
+                    Version   : v1 (0x0)
+                    Log ID    : 76:FF:88:3F:0A:B6:FB:95:51:C2:61:CC:F5:87:BA:34:
+                                B4:A4:CD:BB:29:DC:68:42:0A:9F:E6:67:4C:5A:3A:74
+                    Timestamp : May  6 11:31:32.232 2024 GMT
+                    Extensions: none
+                    Signature : ecdsa-with-SHA256
+                                30:44:02:20:0E:E2:93:C4:DD:33:03:26:37:17:EC:FA:
+                                EF:7B:B8:D5:38:67:43:58:E8:5B:A5:D3:E9:84:CB:D0:
+                                52:7C:14:87:02:20:27:F4:A9:3D:1D:C3:1F:9B:69:54:
+                                EC:A1:B8:7E:1A:8C:81:6B:33:C4:05:72:A5:B4:7E:D2:
+                                F3:A9:CD:24:2F:CE
+                Signed Certificate Timestamp:
+                    Version   : v1 (0x0)
+                    Log ID    : 3F:17:4B:4F:D7:22:47:58:94:1D:65:1C:84:BE:0D:12:
+                                ED:90:37:7F:1F:85:6A:EB:C1:BF:28:85:EC:F8:64:6E
+                    Timestamp : May  6 11:31:32.199 2024 GMT
+                    Extensions: none
+                    Signature : ecdsa-with-SHA256
+                                30:46:02:21:00:C3:38:00:13:38:9D:38:22:D7:F2:10:
+                                DA:C0:7F:E4:07:B3:F3:00:F4:4D:0D:E4:C6:84:C8:F9:
+                                64:F2:A5:C0:5F:02:21:00:8A:77:D2:15:1B:E0:92:7F:
+                                B3:A8:6F:43:CE:21:E5:62:E2:B5:B9:05:08:8A:4F:82:
+                                C2:A3:5F:57:DA:03:E6:9C
+    Signature Algorithm: sha256WithRSAEncryption
+    Signature Value:
+        48:29:c8:26:42:7b:00:47:45:5c:6c:0f:1b:73:1f:0f:62:7c:
+        7c:6b:8b:bf:e1:5a:3b:e5:14:18:df:86:c7:a8:52:e5:11:f9:
+        32:a3:94:17:3b:32:13:dd:c6:5e:de:32:84:22:12:93:f3:1c:
+        30:a5:07:c2:8a:ba:aa:54:63:64:50:54:f8:c4:88:75:2c:f7:
+        1f:c1:1c:90:ed:9e:ca:70:a3:ec:78:6d:92:26:bb:05:2c:7f:
+        0e:d9:5e:68:fa:f5:da:82:cc:ad:8f:cb:6d:94:01:c1:30:c1:
+        29:3c:0d:da:c1:1b:c2:59:1d:c1:30:99:43:b1:7e:99:14:47:
+        fa:e1:b0:09:09:1e:62:a9:3d:3d:12:30:0c:67:44:24:e9:53:
+        5b:dd:c3:2d:e9:f9:0b:18:68:e8:56:9f:4e:6a:c5:7e:94:25:
+        9a:b0:d1:1f:cf:f5:dc:ec:66:99:8d:f2:cd:37:5b:b1:a5:ab:
+        76:68:11:d7:99:b2:66:8c:98:7e:a4:b5:6d:82:35:78:7d:e7:
+        6d:69:19:04:c5:4c:1f:91:18:38:44:87:b3:1d:07:d7:19:76:
+        6a:a4:88:68:98:70:0c:16:e5:c9:95:b1:6c:c9:2f:f0:be:aa:
+        2b:78:a1:ea:38:4b:64:65:32:3b:f5:07:95:b8:24:1c:d8:fb:
+        51:11:12:85
+```
+
+</Accordion>

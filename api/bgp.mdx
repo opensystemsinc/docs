@@ -1,0 +1,110 @@
+---
+title: "BGP"
+description: "Query live and historical BGP announcements."
+---
+
+<Note>Early access — register your interest at contact@opensystems.sh.</Note>
+
+## Example
+
+```json
+// https://api.opensystems.sh/bgp?q=130.137.28.14
+
+{
+  "data": [
+    {
+      "first_seen": "2024-12-30T04:12:57Z",
+      "last_seen": "2025-02-06T08:38:40Z",
+      "prefix": "130.137.28.0/24",
+      "origin_asn": 16509,
+      "announcements": [
+        {
+          "first_seen": "2024-12-30T04:12:57Z",
+          "last_seen": "2025-02-06T08:38:40Z",
+          "as_path": [40994, 16509],
+          "communities": [
+            { "asn": 17152, "value": 1 },
+            { "asn": 40994, "value": 1 },
+            { "asn": 40994, "value": 64203 }
+          ],
+          "peers": [
+            {
+              "ip": "193.203.0.75",
+              "asn": 40994
+            }
+          ]
+        }
+      ]
+    }
+    // ...
+  ],
+  "meta": { "results": 1258 }
+}
+```
+
+## Base URL
+
+```
+https://api.opensystems.sh/bgp
+```
+
+## Authentication
+
+Authenticate by passing your API key (with no additional encoding) as `Bearer` token in the `Authorization` header or as `key` parameter in the query string.
+
+## Parameters
+
+<ParamField query="q" type="string" required>
+  Find routes or announcements containing the following:
+
+- `130.137.28.14` returns records relating to this IP address
+- `130.137.16.0/20` returns records relating to any IP addresses or subnets from this CIDR
+- `16509` returns records relating to this ASN
+
+</ParamField>
+
+<ParamField query="field" type="string">
+  Limit the search to a specific field when `q` is an ASN. Accepted values are `origin_asn`, `as_path` and `communities`.
+
+You can limit the search to multiple fields by providing a comma-separated list of fields (e.g., `field=origin_asn,as_path`).
+
+</ParamField>
+
+<ParamField query="expand" type="boolean">
+  When true, expand each announcement into individual records. Defaults to
+  false.
+</ParamField>
+
+<ParamField query="from" type="datetime">
+  Limit results to records seen after this date (e.g. `from=2022-01-01`). Also
+  accepts UNIX timestamp and relative times (e.g. `from=-30d` for 30 days ago).
+</ParamField>
+
+<ParamField query="to" type="datetime">
+  Limit results to records seen before this date (e.g. `to=2023-03-13`). Also
+  accepts UNIX timestamp and relative times (e.g. `to=-30d` for 30 days ago).
+</ParamField>
+
+<ParamField query="not_before" type="datetime">
+  Limit results to records **not** seen before this date (e.g.
+  `not_before=2023-07-01`). Also accepts UNIX timestamp and relative times (e.g.
+  `not_before=-30d` for 30 days ago).
+</ParamField>
+
+<ParamField query="sort" type="string">
+  Available sorts are `first_seen` (the default) or `last_seen`. Both are
+  descending sorts (most recent first).
+</ParamField>
+
+<ParamField query="limit" type="number">
+  Limit the number of results (e.g. `limit=10000`). Defaults to `100`, and up to
+  `10,000`.
+</ParamField>
+
+<ParamField query="offset" type="number">
+  Used for pagination. Defaults to `0`.
+</ParamField>
+
+## Sources
+
+We collect both real-time and historical BGP data from multiple sources, including [RIPE RIS](https://www.ripe.net/analyse/internet-measurements/routing-information-service-ris), [RouteViews](http://www.routeviews.org), [PCH](https://www.pch.net/resources/Raw_Routing_Data) and [GILL](https://bgproutes.io/gill).

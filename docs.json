@@ -1,0 +1,80 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Open Systems",
+  "colors": {
+    "primary": "#09090b",
+    "light": "#fafafa",
+    "dark": "#27272a"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Documentation",
+        "pages": [
+          "introduction"
+        ]
+      },
+      {
+        "group": "API",
+        "pages": [
+          "api/introduction",
+          "api/domains",
+          "api/hostnames",
+          "api/dns",
+          "api/certificates",
+          "api/bgp"
+        ]
+      },
+      {
+        "group": "Alerts",
+        "pages": [
+          "alerts/introduction"
+        ]
+      },
+      {
+        "group": "Feeds",
+        "pages": [
+          "feeds/introduction",
+          "feeds/newly-registered-domains-nrd",
+          "feeds/newly-observed-domains-nod",
+          "feeds/newly-observed-hostnames-noh",
+          "feeds/newly-issued-certificates-nic",
+          "feeds/newly-observed-bgp-announcements-noba"
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png"
+  },
+  "appearance": {
+    "default": "dark"
+  },
+  "background": {
+    "color": {
+      "light": "#ffffff",
+      "dark": "#09090b"
+    }
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "help@opensystems.sh",
+        "href": "mailto:help@opensystems.sh"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "opensystems.sh",
+      "href": "https://opensystems.sh"
+    }
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/opensystemsinc"
+    }
+  }
+}

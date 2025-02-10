@@ -1,0 +1,95 @@
+---
+title: "Newly Registered Domains (NRD)"
+description: "Most malicious domains are registered from a few days to only a few seconds before becoming active, making those domains a very valuable subset of domains to analyze when looking for future malicious activity."
+---
+
+<Info>
+  Traditional approaches usually have a 24-hour blindspot and do not cover
+  ccTLDs. We use a combination of **passive DNS**, **zone files**, **Certificate
+  Transparency logs** and **WHOIS/RDAP** to detect most newly registered domains
+  near instantly.
+</Info>
+
+## Format
+
+```json JSON
+{
+  "timestamp": "2023-03-26T13:30:38Z",
+  "domain": "info-netflix-au.com"
+}
+```
+
+<Info>
+  `timestamp` represents the domain's registration time found in WHOIS/RDAP
+  records.
+</Info>
+
+## Rate
+
+The current rate is around **240,000** newly registered domains per day.
+
+<Info>
+  Many large ccTLDs registries chose not to disclose registration times (`.de`,
+  `.es`, `.eu`, `.au` and more) — use the [NOD
+  feed](/feeds/newly-observed-domains-nod) for the earliest observations of
+  these domains.
+</Info>
+
+## Pricing
+
+Pricing varies based on your intended use — contact us at sales@opensystems.sh to discuss options.
+
+We also offer temporary free access for benchmarking or evaluation, allowing you to compare and test the feed before committing.
+
+## Authentication
+
+Authenticate by passing your API key (with no additional encoding) as `Bearer` token in the `Authorization` header or as `key` parameter in the query string.
+
+## Stream
+
+<AccordionGroup>
+  <Accordion title="WebSocket" icon="rocket-launch">
+    The WebSocket endpoint is available at the following URL.
+
+    ```
+    wss://feeds.opensystems.sh/nrd
+    ```
+
+  </Accordion>
+  <Accordion title="Apache Kafka" icon="share-nodes">
+    Upon request, you will be provided with `USERNAME` and `PASSWORD` credentials for consuming the topic `nrd`.
+
+    ```ini
+    bootstrap.servers=pkc-z1o60.us-east-1.aws.confluent.cloud:9092
+    security.protocol=SASL_SSL
+    sasl.mechanisms=PLAIN
+    sasl.username=<USERNAME>
+    sasl.password=<PASSWORD>
+    group.id=<USERNAME>
+    ```
+
+  </Accordion>
+  <Accordion title="Amazon SNS" icon="aws">
+    Upon request, you will be granted access to the `sns:Subscribe` action for the topic `arn:aws:sns:us-east-1:975050206019:nrd`.
+  </Accordion>
+  <Accordion title="Google Cloud Pub/Sub" icon="google">
+    Upon request, you will be granted the `pubsub.subscriber` role for the topic `projects/opensystems/topics/nrd`.
+  </Accordion>
+  <Accordion title="Azure Event Hubs" icon="microsoft">
+    Evaluating demand, register your interest at contact@opensystems.sh.
+  </Accordion>
+</AccordionGroup>
+
+## Download
+
+Newline-delimited JSON dumps of the previous day's stream are made available daily at the following URL.
+
+```
+https://feeds.opensystems.sh/nrd
+```
+
+<Note>
+  The file is updated every day between midnight and 1am UTC. Use conditional
+  requests (`If-Modified-Since`) or make use of `HEAD` requests to avoid
+  unnecessary bandwidth usage.
+</Note>

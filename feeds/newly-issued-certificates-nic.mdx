@@ -1,0 +1,119 @@
+---
+title: "Newly Issued Certificates (NIC)"
+description: "Nearly all malicious domains get issued a certificate — either manually or automatically — very early in their lifecycle and before becoming active. Certificates also contain valuable pieces of information and patterns when investigating malicious activity."
+---
+
+<Info>
+  We **monitor**, **parse** and **deduplicate** (pre)certificates from all
+  trusted [Certificate Transparency](https://certificate.transparency.dev) logs
+  in real time.
+</Info>
+
+## Format
+
+```json JSON
+{
+  "id": "96582fcd0198b836ecb63807bc25fc17d66f78b32a75b29a72c3c012139caa0d",
+  "serial_number": "041875a54ad86890122498dacd8d32f1c1cc",
+  "subject": {
+    "common_name": "newschatgpt-qsyteam.pages.dev",
+    "alternative_names": [
+      {
+        "type": "domain",
+        "name": "*.newschatgpt-qsyteam.pages.dev"
+      },
+      {
+        "type": "domain",
+        "name": "newschatgpt-qsyteam.pages.dev"
+      }
+    ],
+    "key": {
+      "id": "9abe4a1a0b43e1d2d193d422af7803c1a1259703",
+      "algorithm": "ECDSA",
+      "size": 256,
+      "fingerprints": {
+        "sha256": "d1d9b99c2a91ea683ac3a9fd43a24dc68f499bd0ffa4d00259e0d49f869fca31"
+      }
+    }
+  },
+  "issuer": {
+    "common_name": "E1",
+    "organization": "Let's Encrypt",
+    "country": "US"
+  },
+  "validity": {
+    "not_before": "2024-04-21T09:27:36Z",
+    "not_after": "2024-07-20T09:27:35Z"
+  }
+}
+```
+
+<Info>
+  `id` is the SHA-256 fingerprint of the TBS certificate with the poison
+  extension and SCT list extension removed (when present). It identifies a
+  unique certificate issuance and is used to pair precertificates and
+  certificates.
+</Info>
+
+## Rate
+
+The current rate is around **9,000,000** newly issued certificates per day.
+
+## Pricing
+
+Pricing varies based on your intended use — contact us at sales@opensystems.sh to discuss options.
+
+We also offer temporary free access for benchmarking or evaluation, allowing you to compare and test the feed before committing.
+
+## Authentication
+
+Authenticate by passing your API key (with no additional encoding) as `Bearer` token in the `Authorization` header or as `key` parameter in the query string.
+
+## Stream
+
+<AccordionGroup>
+  <Accordion title="WebSocket" icon="rocket-launch">
+    The WebSocket endpoint is available at the following URL.
+
+    ```
+    wss://feeds.opensystems.sh/nic
+    ```
+
+  </Accordion>
+  <Accordion title="Apache Kafka" icon="share-nodes">
+    Upon request, you will be provided with `USERNAME` and `PASSWORD` credentials for consuming the topic `nic`.
+
+    ```ini
+    bootstrap.servers=pkc-z1o60.us-east-1.aws.confluent.cloud:9092
+    security.protocol=SASL_SSL
+    sasl.mechanisms=PLAIN
+    sasl.username=<USERNAME>
+    sasl.password=<PASSWORD>
+    group.id=<USERNAME>
+    ```
+
+  </Accordion>
+  <Accordion title="Amazon SNS" icon="aws">
+    Upon request, you will be granted access to the `sns:Subscribe` action for the topic `arn:aws:sns:us-east-1:975050206019:nic`.
+  </Accordion>
+  <Accordion title="Google Cloud Pub/Sub" icon="google">
+    Upon request, you will be granted the `pubsub.subscriber` role for the topic `projects/opensystems/topics/nic`.
+  </Accordion>
+  <Accordion title="Azure Event Hubs" icon="microsoft">
+    Evaluating demand, register your interest at contact@opensystems.sh.
+  </Accordion>
+</AccordionGroup>
+
+## Download
+
+Newline-delimited JSON dumps of the previous day's stream are made available daily at the following URL.
+
+```
+https://feeds.opensystems.sh/nic
+```
+
+<Note>
+  The file is updated every day between midnight and 1am UTC. Use conditional
+  requests (`If-Modified-Since`) or make use of `HEAD` requests to avoid
+  unnecessary bandwidth usage.
+</Note>

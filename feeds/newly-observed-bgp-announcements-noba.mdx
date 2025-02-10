@@ -1,0 +1,88 @@
+---
+title: "Newly Observed BGP Announcements (NOBA)"
+description: "New or updated BGP announcements can reveal important network shifts and early indicators of malicious activity."
+---
+
+<Info>
+  An announcement is considered newly observed if any of its attributes change,
+  or if the announcement has not been observed for more than 30 days.
+</Info>
+
+## Format
+
+```json JSON
+{
+  "timestamp": "2024-12-30T04:12:57Z",
+  "prefix": "130.137.28.0/24",
+  "origin_asn": 16509,
+  "as_path": [40994, 16509],
+  "communities": [
+    { "asn": 17152, "value": 1 },
+    { "asn": 40994, "value": 1 },
+    { "asn": 40994, "value": 64203 }
+  ],
+  "peer": {
+    "ip": "193.203.0.75",
+    "asn": 40994
+  }
+}
+```
+
+## Pricing
+
+Pricing varies based on your intended use — contact us at sales@opensystems.sh to discuss options.
+
+We also offer temporary free access for benchmarking or evaluation, allowing you to compare and test the feed before committing.
+
+## Authentication
+
+Authenticate by passing your API key (with no additional encoding) as `Bearer` token in the `Authorization` header or as `key` parameter in the query string.
+
+## Stream
+
+<AccordionGroup>
+  <Accordion title="WebSocket" icon="rocket-launch">
+    The WebSocket endpoint is available at the following URL.
+
+    ```
+    wss://feeds.opensystems.sh/noba
+    ```
+
+  </Accordion>
+  <Accordion title="Apache Kafka" icon="share-nodes">
+    Upon request, you will be provided with `USERNAME` and `PASSWORD` credentials for consuming the topic `noba`.
+
+    ```ini
+    bootstrap.servers=pkc-z1o60.us-east-1.aws.confluent.cloud:9092
+    security.protocol=SASL_SSL
+    sasl.mechanisms=PLAIN
+    sasl.username=<USERNAME>
+    sasl.password=<PASSWORD>
+    group.id=<USERNAME>
+    ```
+
+  </Accordion>
+  <Accordion title="Amazon SNS" icon="aws">
+    Upon request, you will be granted access to the `sns:Subscribe` action for the topic `arn:aws:sns:us-east-1:975050206019:noba`.
+  </Accordion>
+  <Accordion title="Google Cloud Pub/Sub" icon="google">
+    Upon request, you will be granted the `pubsub.subscriber` role for the topic `projects/opensystems/topics/noba`.
+  </Accordion>
+  <Accordion title="Azure Event Hubs" icon="microsoft">
+    Evaluating demand, register your interest at contact@opensystems.sh.
+  </Accordion>
+</AccordionGroup>
+
+## Download
+
+Newline-delimited JSON dumps of the previous day's stream are made available daily at the following URL.
+
+```
+https://feeds.opensystems.sh/noba
+```
+
+<Note>
+  The file is updated every day between midnight and 1am UTC. Use conditional
+  requests (`If-Modified-Since`) or make use of `HEAD` requests to avoid
+  unnecessary bandwidth usage.
+</Note>

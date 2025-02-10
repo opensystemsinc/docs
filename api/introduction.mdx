@@ -1,0 +1,59 @@
+---
+title: "Introduction"
+description: "An overview of usage, authentication, and key details for working with the API."
+---
+
+## Authentication
+
+An account is issued one API key by default, and additional keys can be created in the dashboard.
+
+Authenticate by passing your API key (with no additional encoding) as bearer token in the `Authorization` header or as `key` parameter in the query string.
+
+## Rate limits
+
+The base rate limit is 25 requests per second with a burst capacity of 100 requests (i.e. a token bucket of 100 tokens refilling at 25 tokens/second).
+
+Dynamic rate limiting automatically adjusts limits based on infrastructure load, allowing up to 100 steady requests per second most of the time.
+
+Limits are applied per account and can be set manually per API key.
+
+The following headers will be included with every response:
+
+```http
+X-RateLimit-Burst-Capacity: 100
+X-RateLimit-Replenish-Rate: 25
+X-RateLimit-Remaining: 76
+```
+
+<Info>
+  Higher rate limits can be requested and are subject to custom pricing.
+</Info>
+
+## Quotas
+
+Monthly quotas are per account and correspond to the number of queries allowed per month. Specific quotas can optionally be set per API key.
+
+Quotas reset monthly on the subscription’s anniversary date and time.
+
+## Errors
+
+Errors are returned using standard HTTP status codes.
+
+| code                    | description                                                      |
+| :---------------------- | :--------------------------------------------------------------- |
+| `400 Bad Request`       | invalid query, check the response body for more information      |
+| `401 Unauthorized`      | missing API key                                                  |
+| `403 Forbidden`         | invalid API key                                                  |
+| `404 Not Found`         | invalid endpoint                                                 |
+| `429 Too Many Requests` | rate limit or monthly quota exceeded, check the response headers |
+| `304 Not Modified`      | conditional request returned no changes                          |
+
+## Conditional requests
+
+All API endpoints support conditional requests to reduce bandwidth usage and make it easier to detect changes.
+
+Send the `If-None-Match` header with the value of the `ETag` header received in the previous response. If the response has not changed (i.e. no new results), the server will respond with a `304 Not Modified` status code and an empty body.
+
+## CORS
+
+CORS is supported for all API endpoints and the relevant CORS headers will automatically be added to the response when an `Origin` header is present in the request.

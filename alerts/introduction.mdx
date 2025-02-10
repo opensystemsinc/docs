@@ -1,0 +1,57 @@
+---
+title: "Introduction"
+description: "Get instantly notified when a new result is available for any query."
+---
+
+<Note>Early access — register your interest at contact@opensystems.sh.</Note>
+
+## Example
+
+```json
+// POST https://api.opensystems.sh/alerts
+{
+  "description": "domains containing netflix (fuzzy)",
+  "type": "domains",
+  "params": {
+    "q": "netflix",
+    "fuzzy": "all"
+  },
+  "targets": {
+    "email": [
+      { "to": ["sec@netflix.com"] }
+    ],
+    "webhook": [
+      { "url": "https://webhook.netflix.com/alerts" }
+    ]
+  }
+}
+
+// webhook sample payload for this alert
+{
+  "data": {
+    "first_seen": "2024-09-06T08:29:11Z",
+    "domain": "netflix-free-account.store"
+  },
+  "meta": {
+    "id": "b0e55651-b634-467c-9989-dd5b7dcb78ca",
+    "description": "domains containing netflix (fuzzy)",
+    "type": "domains",
+    "params": {
+      "q": "netflix",
+      "fuzzy": "all"
+    }
+  }
+}
+```
+
+## Supported parameters
+
+The following API parameters and their accepted values are supported for Alerts.
+
+| type           | parameters                     |
+| :------------- | :----------------------------- |
+| `domains`      | `q`, `fuzzy`                   |
+| `hostnames`    | `q`                            |
+| `dns`          | `q`, `field`, `type`, `expand` |
+| `certificates` | `q`, `strict`                  |
+| `bgp`          | `q`, `field`, `expand`         |

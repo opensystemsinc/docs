@@ -1,0 +1,76 @@
+---
+title: "Newly Observed Hostnames (NOH)"
+description: "NOH focuses on the first time a hostname is observed in the DNS and can help uncover malicious activity at the subdomain level."
+---
+
+## Format
+
+```json JSON
+{
+  "timestamp": "2022-02-14T18:25:43.511Z",
+  "hostname": "login-paypal.ddns.net"
+}
+```
+
+## Rate
+
+The current rate is around **15,000,000** newly observed hostnames per day.
+
+## Pricing
+
+Pricing varies based on your intended use — contact us at sales@opensystems.sh to discuss options.
+
+We also offer temporary free access for benchmarking or evaluation, allowing you to compare and test the feed before committing.
+
+## Authentication
+
+Authenticate by passing your API key (with no additional encoding) as `Bearer` token in the `Authorization` header or as `key` parameter in the query string.
+
+## Stream
+
+<AccordionGroup>
+  <Accordion title="WebSocket" icon="rocket-launch">
+    The WebSocket endpoint is available at the following URL.
+
+    ```
+    wss://feeds.opensystems.sh/noh
+    ```
+
+  </Accordion>
+  <Accordion title="Apache Kafka" icon="share-nodes">
+    Upon request, you will be provided with `USERNAME` and `PASSWORD` credentials for consuming the topic `noh`.
+
+    ```ini
+    bootstrap.servers=pkc-z1o60.us-east-1.aws.confluent.cloud:9092
+    security.protocol=SASL_SSL
+    sasl.mechanisms=PLAIN
+    sasl.username=<USERNAME>
+    sasl.password=<PASSWORD>
+    group.id=<USERNAME>
+    ```
+
+  </Accordion>
+  <Accordion title="Amazon SNS" icon="aws">
+    Upon request, you will be granted access to the `sns:Subscribe` action for the topic `arn:aws:sns:us-east-1:975050206019:noh`.
+  </Accordion>
+  <Accordion title="Google Cloud Pub/Sub" icon="google">
+    Upon request, you will be granted the `pubsub.subscriber` role for the topic `projects/opensystems/topics/noh`.
+  </Accordion>
+  <Accordion title="Azure Event Hubs" icon="microsoft">
+    Evaluating demand, register your interest at contact@opensystems.sh.
+  </Accordion>
+</AccordionGroup>
+
+## Download
+
+Newline-delimited JSON dumps of the previous day's stream are made available daily at the following URL.
+
+```
+https://feeds.opensystems.sh/noh
+```
+
+<Note>
+  The file is updated every day between midnight and 1am UTC. Use conditional
+  requests (`If-Modified-Since`) or make use of `HEAD` requests to avoid
+  unnecessary bandwidth usage.
+</Note>

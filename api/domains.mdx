@@ -1,0 +1,300 @@
+---
+title: "Domains"
+description: "Find all registered domains matching one or multiple keywords, a glob or a regex pattern."
+---
+
+<Info>
+  This endpoint is highly effective at identifying phishing domains,
+  particularly when leveraging the [fuzziness](#fuzziness) feature.
+</Info>
+
+## Example
+
+```json
+// https://api.opensystems.sh/domains?q=microsoft
+
+{
+  "data": [
+    {
+      "first_seen": "2024-09-06T08:29:11Z",
+      "last_seen": "2024-09-06T08:29:11Z",
+      "domain": "microsoftsurfacecareservice.store"
+    },
+    {
+      "first_seen": "2024-09-06T06:39:55Z",
+      "last_seen": "2024-09-06T08:42:33Z",
+      "domain": "support-microsofthelp.com"
+    },
+    {
+      "first_seen": "2024-09-06T06:38:03Z",
+      "last_seen": "2024-09-06T07:48:13Z",
+      "domain": "microsoftinflection.com"
+    },
+
+    // ...
+
+    {
+      "first_seen": "2024-09-05T06:30:15Z",
+      "last_seen": "2024-09-06T06:18:31Z",
+      "domain": "microsoft-ssl.com"
+    },
+    {
+      "first_seen": "2024-09-05T06:30:15Z",
+      "last_seen": "2024-09-06T06:17:39Z",
+      "domain": "microsoft356copilot.com"
+    }
+  ],
+  "meta": { "results": 23116 }
+}
+```
+
+## Base URL
+
+```
+https://api.opensystems.sh/domains
+```
+
+## Authentication
+
+Authenticate by passing your API key (with no additional encoding) as `Bearer` token in the `Authorization` header or as `key` parameter in the query string.
+
+## Parameters
+
+<ParamField query="q" type="string" required>
+  One or multiple keywords, a glob or a regex pattern.
+
+Learn more about the [different types of queries](#query).
+
+</ParamField>
+
+<ParamField query="fuzzy" type="[]string">
+  Apply fuzziness to `q`. Accepts a comma-separated list of fuzzy algorithms, or
+  `all` to apply them all.
+
+Read more about the available algorithms [here](#fuzziness).
+
+</ParamField>
+
+<ParamField query="from" type="datetime">
+  Limit results to domains seen after this date (e.g. `from=2022-01-01`). Also
+  accepts UNIX timestamp and relative times (e.g. `from=-30d` for 30 days ago).
+</ParamField>
+
+<ParamField query="to" type="datetime">
+  Limit results to names seen before this date (e.g. `to=2023-03-13`). Also
+  accepts UNIX timestamp and relative times (e.g. `to=-30d` for 30 days ago).
+</ParamField>
+
+<ParamField query="not_before" type="datetime">
+  Limit results to names **not** seen before this date (e.g.
+  `not_before=2023-07-01`). Also accepts UNIX timestamp and relative times (e.g.
+  `not_before=-30d` for 30 days ago).
+</ParamField>
+
+<ParamField query="sort" type="string">
+  Available sorts are `first_seen` (the default) or `last_seen`. Both are
+  descending sorts (most recent first).
+</ParamField>
+
+<ParamField query="limit" type="number">
+  Limit the number of results (e.g. `limit=10000`). Defaults to `100`, and up to
+  `10,000`.
+</ParamField>
+
+<ParamField query="offset" type="number">
+  Used for pagination. Defaults to `0`.
+</ParamField>
+
+## Query
+
+The `q` parameter supports multiple types of queries.
+
+### Keyword
+
+Find domains containing a specific keyword.
+
+For instance, you can find all registered domains containing the keyword `paypal` by using `q=paypal`.
+
+### Multiple keywords
+
+Find domains containing multiple keywords.
+
+For instance, you can find all registered domains containing both keywords `paypal` and `login` by using `q=paypal,login`.
+
+Keywords should be separated by a comma (`,`).
+
+<Info>
+  The order of the keywords does not matter (e.g. `q=netflix,account` will match
+  both `netflix-account.com` and `myaccount-netflix.net`).
+</Info>
+
+### Glob
+
+Find domains matching a glob pattern.
+
+For instance, you can find all registered domains with the name `paypal` with any TLD by using `q=paypal.**`.
+
+The following metacharacters are supported:
+
+| metacharacters | description                                     |
+| :------------- | :---------------------------------------------- |
+| `[abc]`        | match any character `a`, `b`, or `c`            |
+| `[!abc]`       | match any character except `a`, `b`, or `c`     |
+| `{abc,xyz}`    | match either `abc` or `xyz`                     |
+| `?`            | match any single character                      |
+| `*`            | match any sequence of characters within a label |
+| `**`           | match any sequence of characters across labels  |
+
+<Info>Glob patterns are anchored left and right by default.</Info>
+
+### RegEx
+
+Find domains matching a regular expression pattern.
+
+For instance, you can find all registered domains for `xx...` variations of `netflix` by using `q=/^netflix{2,}\./`.
+
+<Info>
+  The value of `q` should start and end with `/` to be interpreted as a RegEx
+  pattern.
+</Info>
+
+<Info>
+  RegEx patterns are **NOT** anchored by default — use `^` and/or `$` for
+  anchoring.
+</Info>
+
+## Fuzziness
+
+Attackers commonly alter the spelling of a domain name to trick users into thinking they are visiting a legitimate website.
+
+The `fuzzy` parameter lets you easily apply fuzziness to your search query and find those domains.
+
+It accepts a comma-separated list of algorithms (or `all` to apply them all):
+
+<AccordionGroup>
+  <Accordion title="swap">
+    Swap characters with each other.
+
+    ```txt
+    paypal
+    papyal
+    paypla
+    pyapal
+    ...
+    ```
+
+  </Accordion>
+  <Accordion title="omit">
+    Removes a single character from the query.
+
+    ```txt
+    paypal
+    paypl
+    papal
+    aypal
+    ...
+    ```
+
+  </Accordion>
+  <Accordion title="repeat">
+    Repeats each character of the query.
+
+    ```txt
+    paypal
+    payppal
+    paypaal
+    paaypal
+    ...
+    ```
+
+  </Accordion>
+  <Accordion title="typo">
+    Replace each adjacent keyboard key in all positions.
+
+    ```txt
+    paypal
+    laypal
+    pqypal
+    patpal
+    ...
+    ```
+
+  </Accordion>
+  <Accordion title="bitflip">
+    Flips each bit of the query.
+
+    ```txt
+    paypal
+    0aypal
+    pa9pal
+    payxal
+    ...
+    ```
+
+  </Accordion>
+  <Accordion title="hyphen">
+    Insert hyphens in all positions.
+
+    ```txt
+    paypal
+    pay-pal
+    p-aypal
+    payp-al
+    ...
+    ```
+
+  </Accordion>
+  <Accordion title="fatfinger">
+    Insert each adjacent keyboard key in all positions.
+
+    ```txt
+    paypal
+    pagypal
+    payupal
+    pzaypal
+    ...
+    ```
+
+  </Accordion>
+  <Accordion title="vowels">
+    Swap each vowel by other vowels.
+
+    ```txt
+    paypal
+    paypol
+    peypal
+    paipal
+    ...
+    ```
+
+  </Accordion>
+  <Accordion title="dyslexia">
+    Swap characters often confused with each other by people with dyslexia.
+
+    ```txt
+    paypal
+    paybal
+    paydal
+    payqal
+    ...
+    ```
+
+  </Accordion>
+  <Accordion title="homoglyph">
+    Replace each character with lookalike ASCII characters.
+
+    ```txt
+    paypal
+    paypa1
+    paypai
+    ...
+    ```
+
+    <Info>
+      Search is by default ASCII-folded and will return accented (or lookalike) IDN variations. This algorithm only focuses on swapping lookalike ASCII characters like "l", "1" and "i".
+    </Info>
+
+  </Accordion>
+</AccordionGroup>
+
+<Info>The original `q` value will be kept when searching.</Info>

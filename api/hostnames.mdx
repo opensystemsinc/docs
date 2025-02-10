@@ -1,0 +1,156 @@
+---
+title: "Hostnames"
+description: "Find all hostnames matching one or multiple keywords, a glob or a regex pattern."
+---
+
+<Info>
+  This endpoint can be used to find all subdomains of a registered domain, all
+  registered domains having a specific subdomain, and many other things.
+</Info>
+
+## Example
+
+```json
+// https://api.opensystems.sh/hostnames?q=*.securitytrails.com
+
+{
+  "data": [
+    {
+      "first_seen": "2025-01-07T05:15:14Z",
+      "last_seen": "2025-01-07T05:15:14Z",
+      "hostname": "_dmarc.securitytrails.com"
+    },
+    {
+      "first_seen": "2024-09-11T15:57:28Z",
+      "last_seen": "2025-02-06T12:13:44Z",
+      "hostname": "ish-asi.securitytrails.com"
+    },
+    {
+      "first_seen": "2024-06-29T09:51:55Z",
+      "last_seen": "2025-02-04T08:32:50Z",
+      "hostname": "asi-trials.securitytrails.com"
+    },
+    {
+      "first_seen": "2024-06-27T23:02:53Z",
+      "last_seen": "2025-02-03T11:13:42Z",
+      "hostname": "devops-test.securitytrails.com"
+    },
+
+    // ...
+
+    {
+      "first_seen": "2023-04-15T05:58:45Z",
+      "last_seen": "2025-02-05T18:26:00Z",
+      "hostname": "api.securitytrails.com"
+    }
+  ],
+  "meta": { "results": 57 }
+}
+```
+
+## Base URL
+
+```
+https://api.opensystems.sh/hostnames
+```
+
+## Authentication
+
+Authenticate by passing your API key (with no additional encoding) as `Bearer` token in the `Authorization` header or as `key` parameter in the query string.
+
+## Parameters
+
+<ParamField query="q" type="string" required>
+  One or multiple keywords, a glob or a regex pattern.
+
+Learn more about the [different types of queries](#query).
+
+</ParamField>
+
+<ParamField query="from" type="datetime">
+  Limit results to hostnames seen after this date (e.g. `from=2022-01-01`). Also
+  accepts UNIX timestamp and relative times (e.g. `from=-30d` for 30 days ago).
+</ParamField>
+
+<ParamField query="to" type="datetime">
+  Limit results to names seen before this date (e.g. `to=2023-03-13`). Also
+  accepts UNIX timestamp and relative times (e.g. `to=-30d` for 30 days ago).
+</ParamField>
+
+<ParamField query="not_before" type="datetime">
+  Limit results to names **not** seen before this date (e.g.
+  `not_before=2023-07-01`). Also accepts UNIX timestamp and relative times (e.g.
+  `not_before=-30d` for 30 days ago).
+</ParamField>
+
+<ParamField query="sort" type="string">
+  Available sorts are `first_seen` (the default) or `last_seen`. Both are
+  descending sorts (most recent first).
+</ParamField>
+
+<ParamField query="limit" type="number">
+  Limit the number of results (e.g. `limit=10000`). Defaults to `100`, and up to
+  `10,000`.
+</ParamField>
+
+<ParamField query="offset" type="number">
+  Used for pagination. Defaults to `0`.
+</ParamField>
+
+## Query
+
+The `q` parameter supports multiple types of queries.
+
+### Keyword
+
+Find hostnames containing a specific keyword.
+
+For instance, you can find all hostnames containing the keyword `paypal` by using `q=paypal`.
+
+### Multiple keywords
+
+Find hostnames containing multiple keywords.
+
+For instance, you can find all hostnames containing both keywords `paypal` and `login` by using `q=paypal,login`.
+
+Keywords should be separated by a comma (`,`).
+
+<Info>
+  The order of the keywords does not matter (e.g. `q=netflix,account` will match
+  both `netflix-account.com` and `myaccount-netflix.net`).
+</Info>
+
+### Glob
+
+Find hostnames matching a glob pattern.
+
+For instance, you can find all hostnames with the name `paypal` with any TLD by using `q=paypal.**`.
+
+The following metacharacters are supported:
+
+| metacharacters | description                                     |
+| :------------- | :---------------------------------------------- |
+| `[abc]`        | match any character `a`, `b`, or `c`            |
+| `[!abc]`       | match any character except `a`, `b`, or `c`     |
+| `{abc,xyz}`    | match either `abc` or `xyz`                     |
+| `?`            | match any single character                      |
+| `*`            | match any sequence of characters within a label |
+| `**`           | match any sequence of characters across labels  |
+
+<Info>Glob patterns are anchored left and right by default.</Info>
+
+### RegEx
+
+Find hostnames matching a regular expression pattern.
+
+For instance, you can find all hostnames for `xx...` variations of `netflix` by using `q=/^netflix{2,}\./`.
+
+<Info>
+  The value of `q` should start and end with `/` to be interpreted as a RegEx
+  pattern.
+</Info>
+
+<Info>
+  RegEx patterns are **NOT** anchored by default — use `^` and/or `$` for
+  anchoring.
+</Info>
