@@ -19,12 +19,12 @@
       {
         "group": "API",
         "pages": [
-          "api/introduction",
-          "api/domains",
-          "api/hostnames",
-          "api/dns",
-          "api/certificates",
-          "api/bgp"
+          "api-reference/introduction",
+          "api-reference/domains",
+          "api-reference/hostnames",
+          "api-reference/dns",
+          "api-reference/certificates",
+          "api-reference/bgp"
         ]
       },
       {
