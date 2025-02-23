@@ -128,14 +128,16 @@ For instance, you can find all hostnames with the name `paypal` with any TLD by 
 
 The following metacharacters are supported:
 
-| metacharacters | description                                     |
-| :------------- | :---------------------------------------------- |
-| `[abc]`        | match any character `a`, `b`, or `c`            |
-| `[!abc]`       | match any character except `a`, `b`, or `c`     |
-| `{abc,xyz}`    | match either `abc` or `xyz`                     |
-| `?`            | match any single character                      |
-| `*`            | match any sequence of characters within a label |
-| `**`           | match any sequence of characters across labels  |
+| metacharacters | description                                                          |
+| :------------- | :------------------------------------------------------------------- |
+| `[abc]`        | match any character `a`, `b`, or `c`                                 |
+| `[!abc]`       | match any character except `a`, `b`, or `c`                          |
+| `[0-9]`        | match any character from the character range `0-9`                   |
+| `[!0-9]`       | match any character except characters from the character range `0-9` |
+| `{abc,xyz}`    | match either `abc` or `xyz`                                          |
+| `?`            | match any single character                                           |
+| `*`            | match any sequence of characters within a label                      |
+| `**`           | match any sequence of characters across labels                       |
 
 <Info>Glob patterns are anchored left and right by default.</Info>
 
